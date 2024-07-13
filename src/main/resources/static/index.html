@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Traffic Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1>Network Traffic Monitor</h1>
+    <div class="charts">
+        <canvas id="trafficChart"></canvas>
+        <canvas id="anomalyChart"></canvas>
+    </div>
+    <h2>Recent Anomalies</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Time</th>
+            <th>Type</th>
+            <th>Severity</th>
+            <th>Description</th>
+            <th>Affected IP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="anomaly in anomalyData" :key="anomaly.timestamp">
+            <td>{{ new Date(anomaly.timestamp).toLocaleString() }}</td>
+            <td>{{ anomaly.type }}</td>
+            <td>{{ anomaly.severity }}</td>
+            <td>{{ anomaly.description }}</td>
+            <td>{{ anomaly.affectedIp }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+    // Chart.js initialization
+    let trafficChart, anomalyChart;
+
+    app.$watch('trafficChartData', function(newData) {
+        if (!trafficChart) {
+            const ctx = document.getElementById('trafficChart').getContext('2d');
+            trafficChart = new Chart(ctx, {
+                type: 'line',
+                data: newData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Network Traffic'
+                    }
+                }
+            });
+        } else {
+            trafficChart.data = newData;
+            trafficChart.update();
+        }
+    });
+
+    app.$watch('anomalyChartData', function(newData) {
+        if (!anomalyChart) {
+            const ctx = document.getElementById('anomalyChart').getContext('2d');
+            anomalyChart = new Chart(ctx, {
+                type: 'bar',
+                data: newData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Anomalies'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        } else {
+            anomalyChart.data = newData;
+            anomalyChart.update();
+        }
+    });
+</script>
+</body>
+</html>
