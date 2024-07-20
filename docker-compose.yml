@@ -21,6 +21,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=your_organization
       - DOCKER_INFLUXDB_INIT_BUCKET=your_bucket
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=your_influxdb_token
+      - DOCKER_INFLUXDB_INIT_RETENTION=30d
     volumes:
       - influxdb-data:/var/lib/influxdb2
 
