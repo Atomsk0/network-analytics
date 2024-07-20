@@ -1,6 +1,6 @@
 HELP.md
 target/
-.mvn/git ini
+.mvn
 !**/src/main/**/target/
 !**/src/test/**/target/
 mvnw
